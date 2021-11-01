@@ -12,6 +12,7 @@ function EditTraining(props) {
 
     const [open, setOpen] = useState(false);
     const [training, setTraining] = useState({ date: '', activity: '', duration: '', firstname: '', lastname: '' });
+    const [view, setView] = useState({ date: ''});
     const [customer, setCustomer] = useState({ firstname: '', lastname: '', streetaddress: '', postcode: '', city: '', email: '', phone: '', links: '' });
 
     const fetchCustomerData = () => {
@@ -27,6 +28,7 @@ function EditTraining(props) {
 
     const handleOpen = () => {
         setTraining({ date: props.training.date.split("T")[0] + " " + props.training.date.split("T")[1].split(":")[0] + ":" + props.training.date.split("T")[1].split(":")[1], activity: props.training.activity, duration: props.training.duration, firstname: props.training.customer.firstname, lastname: props.training.customer.lastname });
+        setView({ date: props.training.date.split("T")[0] + " " + props.training.date.split("T")[1].split(":")[0] + ":" + props.training.date.split("T")[1].split(":")[1]});
         setOpen(true);
     }
 
@@ -40,7 +42,7 @@ function EditTraining(props) {
 
     const handleTrainingSave = () => {
 
-        console.log(training.date);
+        /*console.log(training.date);
 
         var now = new Date(training.date);
 
@@ -48,7 +50,7 @@ function EditTraining(props) {
 
         console.log(isoString);
 
-        setTraining({ ...training, date: isoString });
+        setTraining({ ...training, date: isoString });*/
         handleClose();
         handleCustomerSave()
         props.editTraining('https://customerrest.herokuapp.com/api/trainings/' + props.training.id, training);
@@ -77,7 +79,7 @@ function EditTraining(props) {
                         margin="dense"
                         id="date"
                         name="date"
-                        value={training.date.split("T")[0]}
+                        value={view.date}
                         onChange={handleChange}
                         label="Date"
                         fullWidth
