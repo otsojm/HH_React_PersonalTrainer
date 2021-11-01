@@ -56,7 +56,7 @@ function TrainingsListing() {
         {
             filterable: false,
             sortable: false,
-            Cell: row => (<EditTraining customer={row.original} editTraining={editTraining} />)
+            Cell: row => (<EditTraining training={row.original} editTraining={editTraining} />)
         }
     ]
 
@@ -68,7 +68,7 @@ function TrainingsListing() {
 
         for (var i = 0; i < trainings.length; i++) {
 
-            csvTrainings.push({ date: trainings[i].date, activity: trainings[i].activity, duration: trainings[i].duration, name: trainings[i].customer.firstname + ' ' + trainings[i].customer.lastname, links: 'https://customerrest.herokuapp.com/api/trainings/' + trainings[i].id });
+            csvTrainings.push({ date: trainings[i].date, activity: trainings[i].activity, duration: trainings[i].duration, firstname: trainings[i].customer.firstname, lastname: trainings[i].customer.lastname, links: 'https://customerrest.herokuapp.com/api/trainings/' + trainings[i].id });
         }
         render(
             <CSVDownload data={csvTrainings} target="_blank" />
@@ -86,7 +86,7 @@ function TrainingsListing() {
         fetchTrainingData();
     }, []);
 
-    const addCustomer = (value) => {
+    const addTraining = (value) => {
         fetch('https://customerrest.herokuapp.com/api/customers', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify(value) })
             .then(response => response.json())
             .then(data => fetchTrainingData())
@@ -107,8 +107,8 @@ function TrainingsListing() {
             .catch(error => console.error(error))
     }
 
-    const editTraining = (value, customer) => {
-        fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(customer) })
+    const editTraining = (value, training) => {
+        fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(training) })
             .then(response => fetchTrainingData())
             .catch(err => console.error(err))
     }
