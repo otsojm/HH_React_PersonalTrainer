@@ -69,7 +69,7 @@ function EditTraining(props) {
                         name="date"
                         value={training.date}
                         onChange={handleChange}
-                        label="Date"
+                        label="Date e.g. 13.12.2021 09:00"
                         fullWidth
                     />
                     <TextField
