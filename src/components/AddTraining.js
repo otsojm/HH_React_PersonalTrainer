@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,25 +8,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import '../css/bootstrap.min.css';
 
-function EditTraining(props) {
+function EditCustomer(props) {
+
+    console.log(props.customer.links[0].href);
 
     const [open, setOpen] = useState(false);
-    const [training, setTraining] = useState({ date: '', activity: '', duration: '', firstname: '', lastname: '' });
-    const [customer, setCustomer] = useState({ firstname: '', lastname: '', streetaddress: '', postcode: '', city: '', email: '', phone: '', links: '' });
-
-    const fetchCustomerData = () => {
-        fetch('https://customerrest.herokuapp.com/api/trainings/' + props.training.id + '/customer')
-            .then(response => response.json())
-            .then(data => setCustomer(data))
-            .catch(error => console.error(error))
-    }
-
-    useEffect(() => {
-        fetchCustomerData();
-    }, []);
+    const [training, setTraining] = useState({ date: '', activity: '', duration: '', customer: props.customer.links[0].href });
 
     const handleOpen = () => {
-        setTraining({ date: props.training.date, activity: props.training.activity, duration: props.training.duration, firstname: props.training.customer.firstname, lastname: props.training.customer.lastname });
         setOpen(true);
     }
 
@@ -38,38 +27,30 @@ function EditTraining(props) {
         setOpen(false);
     }
 
-    const handleTrainingSave = () => {
+    const handleSave = () => {
         handleClose();
-        handleCustomerSave()
-        props.editTraining('https://customerrest.herokuapp.com/api/trainings/' + props.training.id, training);
-        setTraining({ date: '', activity: '', duration: '', firstname: '', lastname: '' });
-    }
-
-    const handleCustomerSave = () => {
-        fetch(customer.links[0].href, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(customer) })
-            .then(response => fetchCustomerData())
-            .catch(err => console.error(err))
-        setCustomer({ firstname: '', lastname: '', streetaddress: '', postcode: '', city: '', email: '', phone: '', links: '' });
+        props.addTraining(training);
+        setTraining({ date: '', activity: '', duration: '', customer: '' });
     }
 
     const handleChange = (event) => {
         setTraining({ ...training, [event.target.name]: event.target.value });
-        setCustomer({ ...customer, [event.target.name]: event.target.value })
     }
 
     return (
         <div>
-            <Button variant="contained" class="btn btn-info" onClick={handleOpen}>Edit</Button>
+            <Button variant="contained" class="btn btn-primary" onClick={handleOpen}>Add training</Button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Edit training</DialogTitle>
+                <DialogTitle>Add training</DialogTitle>
                 <DialogContent>
                     <TextField
+                        autoFocus
                         margin="dense"
                         id="date"
                         name="date"
                         value={training.date}
                         onChange={handleChange}
-                        label="Date"
+                        label="Date e.g. 13.12.2021 09:00"
                         fullWidth
                     />
                     <TextField
@@ -94,18 +75,16 @@ function EditTraining(props) {
                         margin="dense"
                         id="firstname"
                         name="firstname"
-                        value={customer.firstname}
-                        onChange={handleChange}
-                        label="Firstname"
+                        value={props.customer.firstname}
+                        label="First name"
                         fullWidth
                     />
                     <TextField
                         margin="dense"
                         id="lastname"
                         name="lastname"
-                        value={customer.lastname}
-                        onChange={handleChange}
-                        label="Lastname"
+                        value={props.customer.lastname}
+                        label="Last name"
                         fullWidth
                     />
                 </DialogContent>
@@ -113,7 +92,7 @@ function EditTraining(props) {
                     <Button onClick={handleCancel} variant="contained" class="btn btn-danger">
                         Cancel
                     </Button>
-                    <Button onClick={handleTrainingSave} variant="contained" class="btn btn-success">
+                    <Button onClick={handleSave} variant="contained" class="btn btn-success">
                         Save
                     </Button>
                 </DialogActions>
@@ -122,4 +101,4 @@ function EditTraining(props) {
     )
 }
 
-export default EditTraining;
+export default EditCustomer;

@@ -48,7 +48,7 @@ function EditCustomer(props) {
                         name="firstname"
                         value={customer.firstname}
                         onChange={handleChange}
-                        label="Firstname"
+                        label="First name"
                         fullWidth
                     />
                     <TextField
@@ -57,7 +57,7 @@ function EditCustomer(props) {
                         name="lastname"
                         value={customer.lastname}
                         onChange={handleChange}
-                        label="Lastname"
+                        label="Last name"
                         fullWidth
                     />
                     <TextField

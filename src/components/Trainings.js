@@ -5,17 +5,10 @@ import { CSVDownload } from 'react-csv';
 import { render } from '@testing-library/react';
 
 import EditTraining from './EditTraining';
-import AddCustomer from './AddCustomer';
 
 import MateriUIDrawer from './Drawer';
 
 import 'react-table-6/react-table.css';
-
-/* 
-await fetch('https://customerrest.herokuapp.com/api/customers')
-            .then(response => response.json())
-            .then(data => console.log(data.content[0].links[0].href))
-*/
 
 function TrainingsListing() {
 
@@ -76,22 +69,25 @@ function TrainingsListing() {
     }
 
     const fetchTrainingData = () => {
-        fetch('https://customerrest.herokuapp.com/gettrainings')
-            .then(response => response.json())
-            .then(data => setTrainings(data))
-            .catch(error => console.error(error))
+        fetch('https://customerrest.herokuapp.com/gettrainings').then(async response => {
+
+            try {
+                const data = await response.json()
+
+                for (var i = 0; i < data.length; i++) {
+                    data[i].date = data[i].date.substring(8, 10) + "." + data[i].date.substring(5, 7) + "." + data[i].date.substring(0, 4) + " " + data[i].date.substring(11, 16);
+                }
+
+                setTrainings(data);
+            } catch (error) {
+                console.error(error)
+            }
+        })
     }
 
     useEffect(() => {
         fetchTrainingData();
     }, []);
-
-    const addTraining = (value) => {
-        fetch('https://customerrest.herokuapp.com/api/customers', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify(value) })
-            .then(response => response.json())
-            .then(data => fetchTrainingData())
-            .catch(error => console.error(error))
-    }
 
     const deleteTraining = (value) => {
         if (window.confirm("Do you really want to delete this training?")) {
@@ -102,13 +98,29 @@ function TrainingsListing() {
     }
 
     const resetData = () => {
-        fetch('https://customerrest.herokuapp.com/reset', { method: 'POST' })
-            .then(fetchTrainingData)
-            .catch(error => console.error(error))
+        if (window.confirm("Are you sure? This will reset the whole database to its original values.")) {
+            fetch('https://customerrest.herokuapp.com/reset', { method: 'POST' })
+                .then(fetchTrainingData)
+                .catch(error => console.error(error))
+        }
     }
 
     const editTraining = (value, training) => {
-        fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(training) })
+        var formattedDate = training.date.split(".")[2].split(" ")[0] + "-" + training.date.split(".")[1] + "-" + training.date.split(".")[0] + " " + training.date.split(" ")[1];
+        var now = new Date(formattedDate);
+        var isoString = now.toISOString();
+
+        var hour = parseInt(isoString.split("T")[1].split(":")[0]) + 2;
+
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+
+        var minutes = parseInt(isoString.split("T")[1].split(":")[1]) + '' + parseInt(isoString.split("T")[1].split(":")[2]);
+        var time = hour + ":" + minutes;
+        formattedDate = isoString.split("T")[0] + "T" + time + ":00.000Z";
+
+        fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date: formattedDate, activity: training.activity, duration: training.duration, firstname: training.firstname, lastname: training.lastname }) })
             .then(response => fetchTrainingData())
             .catch(err => console.error(err))
     }
