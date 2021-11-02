@@ -1,7 +1,8 @@
 import MateriUIDrawer from './Drawer';
 
 import React, { useState, useEffect } from 'react';
-import { BarChart, XAxis, YAxis, Bar, Tooltip, } from 'recharts';
+import { BarChart, PieChart, XAxis, YAxis, Bar, Tooltip, Cell } from 'recharts';
+import { Pie } from 'recharts/es6/polar/Pie';
 import calc from 'lodash';
 
 function Statistics() {
@@ -17,10 +18,10 @@ function Statistics() {
                 const data = await response.json()
 
                 data.map(training => {
-                    const durationData = { activity: training.activity, duration: training.duration };
+                    const durationData = { activity: training.activity.toLowerCase(), duration: training.duration };
                     trainingData.push(durationData);
                 })
-                const results = calc(data)
+                const results = calc(trainingData)
                     .groupBy("activity")
                     .map((name, id) => ({
                         name: id,
@@ -37,6 +38,13 @@ function Statistics() {
         fetchTrainingData();
     }, []);
 
+    trainingData.length = 0;
+
+    for (let i = 0; i < trainings.length; i++) {
+        const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        trainingData.push({ color: randomColor })
+    }
+
     return (
         <div>
             <MateriUIDrawer />
@@ -45,8 +53,20 @@ function Statistics() {
                 <XAxis dataKey="name" />
                 <YAxis dataKey="duration" />
                 <Tooltip />
-                <Bar dataKey="duration" fill="#8A2BE2" />
+                <Bar dataKey="duration" fill="#8A2BE2">
+                    {trainingData.map((entry, index) => (
+                        <Cell fill={trainingData[index].color} />
+                    ))}
+                </Bar>
             </BarChart>
+            <PieChart width={400} height={400}>
+                <Pie data={trainings} dataKey="duration" cx={200} cy={200} fill="#8884d8">
+                    {trainingData.map((entry, index) => (
+                        <Cell fill={trainingData[index].color} />
+                    ))}
+                </Pie>
+                <Tooltip />
+            </PieChart>
         </div>
     );
 }
