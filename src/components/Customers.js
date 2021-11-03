@@ -74,7 +74,7 @@ function CustomerListing() {
 
     await sleep(1000)
 
-    for (var i = 0; i < customers.length; i++) {
+    for (let i = 0; i < customers.length; i++) {
 
       csvCustomers.push({ firstname: customers[i].firstname, lastname: customers[i].lastname, streetaddress: customers[i].streetaddress, postcode: customers[i].postcode, city: customers[i].city, email: customers[i].email, phone: customers[i].phone, links: customers[i].links[0].href });
     }
@@ -95,19 +95,23 @@ function CustomerListing() {
   }, []);
 
   const addTraining = (training) => {
+    let formattedDate = training.date.split(".")[2].split(" ")[0] + "-" + training.date.split(".")[1] + "-" + training.date.split(".")[0] + " " + training.date.split(" ")[1];
+    let now = new Date(formattedDate);
+    let isoString = now.toISOString();
 
-    var formattedDate = training.date.split(".")[2].split(" ")[0] + "-" + training.date.split(".")[1] + "-" + training.date.split(".")[0] + " " + training.date.split(" ")[1];
-    var now = new Date(formattedDate);
-    var isoString = now.toISOString();
-
-    var hour = parseInt(isoString.split("T")[1].split(":")[0]) + 2;
+    let hour = parseInt(isoString.split("T")[1].split(":")[0]) + 2;
 
     if (hour < 10) {
-      hour = '0' + hour;
+        hour = '0' + hour;
     }
 
-    var minutes = parseInt(isoString.split("T")[1].split(":")[1]) + '' + parseInt(isoString.split("T")[1].split(":")[2]);
-    var time = hour + ":" + minutes;
+    let minutes = parseInt(isoString.split("T")[1].split(":")[1]);
+
+    if (parseInt(minutes) < 10) {
+        minutes = parseInt(isoString.split("T")[1].split(":")[2]) + '' + parseInt(isoString.split("T")[1].split(":")[1]);
+    }
+
+    let time = hour + ":" + minutes;
     formattedDate = isoString.split("T")[0] + "T" + time + ":00.000Z";
 
     fetch('https://customerrest.herokuapp.com/api/trainings', { method: 'POST', headers: { 'Content-type': 'application/json' }, body: JSON.stringify({ date: formattedDate, activity: training.activity, duration: training.duration, customer: training.customer }) })
@@ -132,7 +136,7 @@ function CustomerListing() {
   }
 
   const resetData = () => {
-    if (window.confirm("Are you sure? This will reset the whole database to its original values.")) {
+    if (window.confirm("Are you sure? This will reset the whole database (customers/trainings) to its original values.")) {
       fetch('https://customerrest.herokuapp.com/reset', { method: 'POST' })
         .then(fetchCustomerData)
         .catch(error => console.error(error))

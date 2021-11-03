@@ -87,7 +87,7 @@ function EditTraining(props) {
                         name="duration"
                         value={training.duration}
                         onChange={handleChange}
-                        label="Duration"
+                        label="Duration (min)"
                         fullWidth
                     />
                     <TextField

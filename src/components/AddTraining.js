@@ -10,8 +10,6 @@ import '../css/bootstrap.min.css';
 
 function EditCustomer(props) {
 
-    console.log(props.customer.links[0].href);
-
     const [open, setOpen] = useState(false);
     const [training, setTraining] = useState({ date: '', activity: '', duration: '', customer: props.customer.links[0].href });
 
@@ -68,7 +66,7 @@ function EditCustomer(props) {
                         name="duration"
                         value={training.duration}
                         onChange={handleChange}
-                        label="Duration"
+                        label="Duration (min)"
                         fullWidth
                     />
                     <TextField
