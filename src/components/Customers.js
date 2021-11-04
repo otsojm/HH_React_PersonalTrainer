@@ -146,7 +146,7 @@ function CustomerListing() {
   const editCustomer = (value, customer) => {
     fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(customer) })
       .then(response => fetchCustomerData())
-      .catch(err => console.error(err))
+      .catch(error => console.error(error))
   }
 
   return (

@@ -127,7 +127,7 @@ function TrainingsListing() {
 
         fetch(value, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date: formattedDate, activity: training.activity, duration: training.duration, firstname: training.firstname, lastname: training.lastname }) })
             .then(response => fetchTrainingData())
-            .catch(err => console.error(err))
+            .catch(error => window.alert(error))
     }
 
     return (
