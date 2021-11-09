@@ -2,7 +2,6 @@ import MateriUIDrawer from './Drawer';
 
 import React, { useState, useEffect } from 'react';
 import { BarChart, PieChart, XAxis, YAxis, Bar, Tooltip, Cell } from 'recharts';
-import { Pie } from 'recharts/es6/polar/Pie';
 import calc from 'lodash';
 
 function Statistics() {
@@ -60,14 +59,6 @@ function Statistics() {
                     ))}
                 </Bar>
             </BarChart>
-            <PieChart width={400} height={400}>
-                <Pie data={trainings} dataKey="duration" cx={200} cy={200} fill="#8884d8">
-                    {trainingData.map((entry, index) => (
-                        <Cell fill={trainingData[index].color} />
-                    ))}
-                </Pie>
-                <Tooltip />
-            </PieChart>
         </div>
     );
 }

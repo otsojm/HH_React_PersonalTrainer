@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -12,19 +12,6 @@ function EditTraining(props) {
 
     const [open, setOpen] = useState(false);
     const [training, setTraining] = useState({ date: '', activity: '', duration: '', firstname: '', lastname: '' });
-    const [customer, setCustomer] = useState({ firstname: '', lastname: '', streetaddress: '', postcode: '', city: '', email: '', phone: '', links: '' });
-
-    const fetchCustomerData = () => {
-        fetch('https://customerrest.herokuapp.com/api/trainings/' + props.training.id + '/customer')
-            .then(response => response.json())
-            .then(data => setCustomer(data))
-            .catch(error => console.error(error))
-    }
-
-    useEffect(() => {
-        fetchCustomerData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const handleOpen = () => {
         setTraining({ date: props.training.date, activity: props.training.activity, duration: props.training.duration, firstname: props.training.customer.firstname, lastname: props.training.customer.lastname });
@@ -41,21 +28,12 @@ function EditTraining(props) {
 
     const handleTrainingSave = () => {
         handleClose();
-        handleCustomerSave()
         props.editTraining('https://customerrest.herokuapp.com/api/trainings/' + props.training.id, training);
         setTraining({ date: '', activity: '', duration: '', firstname: '', lastname: '' });
     }
 
-    const handleCustomerSave = () => {
-        fetch(customer.links[0].href, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(customer) })
-            .then(response => fetchCustomerData())
-            .catch(err => console.error(err))
-        setCustomer({ firstname: '', lastname: '', streetaddress: '', postcode: '', city: '', email: '', phone: '', links: '' });
-    }
-
     const handleChange = (event) => {
         setTraining({ ...training, [event.target.name]: event.target.value });
-        setCustomer({ ...customer, [event.target.name]: event.target.value })
     }
 
     return (
@@ -91,24 +69,7 @@ function EditTraining(props) {
                         label="Duration (min)"
                         fullWidth
                     />
-                    <TextField
-                        margin="dense"
-                        id="firstname"
-                        name="firstname"
-                        value={customer.firstname}
-                        onChange={handleChange}
-                        label="Firstname"
-                        fullWidth
-                    />
-                    <TextField
-                        margin="dense"
-                        id="lastname"
-                        name="lastname"
-                        value={customer.lastname}
-                        onChange={handleChange}
-                        label="Lastname"
-                        fullWidth
-                    />
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} variant="contained" class="btn btn-danger">

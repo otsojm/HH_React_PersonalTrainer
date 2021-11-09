@@ -8,10 +8,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import '../css/bootstrap.min.css';
 
-function EditCustomer(props) {
+function AddTraining(props) {
 
     const [open, setOpen] = useState(false);
-    const [training, setTraining] = useState({ date: '', activity: '', duration: '', customer: props.customer.links[0].href });
+    const [training, setTraining] = useState({ date: '', activity: '', duration: '', customer: '' });
 
     const handleOpen = () => {
         setOpen(true);
@@ -27,7 +27,7 @@ function EditCustomer(props) {
 
     const handleSave = () => {
         handleClose();
-        props.addTraining(training);
+        props.addTraining({ date: training.date, activity: training.activity, duration: training.duration, customer: props.customer.links[0].href });
         setTraining({ date: '', activity: '', duration: '', customer: '' });
     }
 
@@ -99,4 +99,4 @@ function EditCustomer(props) {
     )
 }
 
-export default EditCustomer;
+export default AddTraining;
