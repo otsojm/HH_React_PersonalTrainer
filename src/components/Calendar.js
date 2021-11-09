@@ -15,11 +15,18 @@ function Calendar() {
                 const data = await response.json()
                 const trainingArray = [];
 
-                data.map(training => {
+                data.forEach(training => {
                     const title = training.activity + " (" + training.duration + " min) " + training.customer.firstname + " " + training.customer.lastname;
-                    const trainingEvent = { title: title, date: training.date };
+
+                    const date = new Date(training.date);
+                    
+                    date.setHours( parseInt(date.getHours() - 2), date.getMinutes(), date.getSeconds(), date.getMilliseconds() );
+
+                    const trainingEvent = { title: title, date: date };
+
                     trainingArray.push(trainingEvent);
                 })
+
                 setTraining(trainingArray);
             } catch (error) {
                 console.log(error);

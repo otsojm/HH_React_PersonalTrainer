@@ -17,7 +17,7 @@ function Statistics() {
 
                 const data = await response.json()
 
-                data.map(training => {
+                data.forEach(training => {
                     const durationData = { activity: training.activity.toLowerCase(), duration: training.duration };
                     trainingData.push(durationData);
                 })
@@ -36,6 +36,7 @@ function Statistics() {
     }
     useEffect(() => {
         fetchTrainingData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     trainingData.length = 0;
