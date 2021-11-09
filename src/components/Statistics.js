@@ -1,7 +1,7 @@
 import MateriUIDrawer from './Drawer';
 
 import React, { useState, useEffect } from 'react';
-import { BarChart, PieChart, XAxis, YAxis, Bar, Tooltip, Cell } from 'recharts';
+import { BarChart, XAxis, YAxis, Bar, Tooltip, Cell } from 'recharts';
 import calc from 'lodash';
 
 function Statistics() {
